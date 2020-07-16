@@ -112,7 +112,6 @@ public class Calculator {
         return polishNotationResult;
     }
 
-
     // Выполнение математических операций на основании
     // переданной строки в формате польской записи.
     public static double reversePolishNotationResult(String reversePolishNotation) {
@@ -129,15 +128,14 @@ public class Calculator {
                 while ((!listOfNumbersAndSymbolsToTransferToResult.get(i).equals(" ")) && getSymbolPriority(listOfNumbersAndSymbolsToTransferToResult.get(i)) == 0) {
                     symbolToOperation.append(listOfNumbersAndSymbolsToTransferToResult.get(i++));
 
-                    if (i == listOfNumbersAndSymbolsToTransferToResult.size()) {
-                        break;
-                    }
+                    if (i == listOfNumbersAndSymbolsToTransferToResult.size()) break;
                     stackWithDoubleNumbers.push(Double.parseDouble(symbolToOperation.toString()));
                     symbolToOperation = new StringBuilder();
                 }
 
             }
 
+            // Математические вычисления.
             if (getSymbolPriority(listOfNumbersAndSymbolsToTransferToResult.get(i)) > 1) {
                 double a = stackWithDoubleNumbers.pop(), b = stackWithDoubleNumbers.pop();
 
@@ -151,20 +149,19 @@ public class Calculator {
                     stackWithDoubleNumbers.push(b * a);
                 }
                 if (listOfNumbersAndSymbolsToTransferToResult.get(i).equals("/")) {
+                    // Проверка деления на 0
                     if (a != 0) stackWithDoubleNumbers.push(b / a);
                     else {
                         stackWithDoubleNumbers.push(null);
                         break;
                     }
-
                 }
-
-
             }
-
         }
 
         // В конечном счете в стеке останется один элемент - результат вычисления.
+        // Если в ходе вычисления была попытка деления на 0, тогда
+        // данный метод вернет 0, а конечный результат программы будет null.
         try {
             return stackWithDoubleNumbers.pop();
         }
@@ -203,7 +200,6 @@ public class Calculator {
         catch (NullPointerException exc) {
             return false;
         }
-        if (statementToCheck == null) return false;
 
         // Проверка на дублирующиеся символы.
         String statementWithoutNumbersNoSpace = statementToCheck.replaceAll("\\d", "");
@@ -247,8 +243,6 @@ public class Calculator {
             }
         }
 
-
         return isCorrect;
     }
-
 }

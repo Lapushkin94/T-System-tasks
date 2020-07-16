@@ -16,35 +16,39 @@ public class Calculator {
      *                  Example: <code>(1 + 38) * 4.5 - 1 / 2.</code>
      * @return string value containing result of evaluation or null if statement is invalid
      */
+
     public String evaluate(String statement) {
         // TODO: Implement the logic here
 
-        List<String> myListWithNumbersAndSymbols = toArrayReformation(statement);
+        // Получения списка элементов из введенной строки.
+        List<String> myListWithNumbersAndSymbols = getArrayByPattern(statement);
 
+        // Реализация обратной польской записи.
+        // Результат записывается в строку currentString.
         String currentString = "";
         Stack<String> stackForArithmeticSymbols = new Stack<>();
-        int priority;
+        int symbolPriority;
 
         for (int i = 0; i < myListWithNumbersAndSymbols.size(); i++) {
-            priority = getSymbolPriority(myListWithNumbersAndSymbols.get(i));
+            symbolPriority = getSymbolPriority(myListWithNumbersAndSymbols.get(i));
 
-            if (priority == 0) {
+            if (symbolPriority == 0) {
                 currentString += myListWithNumbersAndSymbols.get(i);
             }
-            if (priority == 1) {
+            if (symbolPriority == 1) {
                 stackForArithmeticSymbols.push(myListWithNumbersAndSymbols.get(i));
             }
-            if (priority > 1) {
+            if (symbolPriority > 1) {
                 currentString += " ";
                 while (!stackForArithmeticSymbols.empty()) {
-                    if (getSymbolPriority(stackForArithmeticSymbols.peek()) >= priority) {
+                    if (getSymbolPriority(stackForArithmeticSymbols.peek()) >= symbolPriority) {
                         currentString += stackForArithmeticSymbols.pop();
                     }
                     else break;
                 }
                 stackForArithmeticSymbols.push(myListWithNumbersAndSymbols.get(i));
             }
-            if (priority == -1) {
+            if (symbolPriority == -1) {
                 currentString += " ";
                 while (getSymbolPriority(stackForArithmeticSymbols.peek()) != 1) {
                     currentString += stackForArithmeticSymbols.pop();
@@ -56,14 +60,29 @@ public class Calculator {
         while (!stackForArithmeticSymbols.empty()) {
             currentString += stackForArithmeticSymbols.pop();
         }
+
+        // Проверка вывода обратной польской записи.
         System.out.println(currentString);
-        double resultDouble = RPNtoResult(currentString);
+
+        // Получение ответа на задачу.
+        // Метод производит математические операции, в зависимости от переданных
+        // данных в формате польской записи.
+        double resultDouble = reversePolishNotationResult(currentString);
+
+        // Результат в виде строки.
         String result = "" + resultDouble;
+
+        // Убираем знак после ".", если число целое.
+        if (resultDouble % 1 == 0) {
+            result = "" + (int) resultDouble;
+        }
+
 
         return result;
     }
 
-    public static List<String> toArrayReformation(String inputString) {
+    // Метод преобразует строку в список по заданному шаблону.
+    public static List<String> getArrayByPattern(String inputString) {
 
         Pattern patterForNumbersAndArithmeticSymbols = Pattern.compile("(\\d+(\\.\\d+)?)|(\\+|\\-|\\*|\\/|\\(|\\))");
 
@@ -77,9 +96,11 @@ public class Calculator {
         return listWithNumbersAndSymbols;
     }
 
-    public static double RPNtoResult(String rpnResult) {
+    // Выполнение математических операций на основании
+    // переданной строки в формате польской записи.
+    public static double reversePolishNotationResult(String reversePolishNotation) {
 
-        List<String> listOfNumbersAndSymbolsToTransferToResult = toArrayReformation(rpnResult);
+        List<String> listOfNumbersAndSymbolsToTransferToResult = getArrayByPattern(reversePolishNotation);
         String symbolToOperation = new String();
         Stack<Double> stackWithDoubleNumbers = new Stack<>();
 
@@ -124,6 +145,7 @@ public class Calculator {
         return stackWithDoubleNumbers.pop();
     }
 
+    // Метод возвращает приоритет переданного в него символа.
     private static int getSymbolPriority(String symbol) {
         if (symbol.equals("*") || symbol.equals("/"))
             return 3;

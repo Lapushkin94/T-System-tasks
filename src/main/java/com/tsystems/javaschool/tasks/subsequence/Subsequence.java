@@ -16,7 +16,7 @@ public class Subsequence {
     public boolean find(List x, List y) {
         // TODO: Implement the logic here
 
-        // Результат.
+        // Переменная результата.
         boolean result = true;
 
         // Проверка на null.

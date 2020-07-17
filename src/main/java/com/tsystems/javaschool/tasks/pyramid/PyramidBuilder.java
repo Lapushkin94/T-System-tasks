@@ -121,5 +121,4 @@ public class PyramidBuilder {
 
         return result;
     }
-
 }

@@ -1,6 +1,5 @@
 package com.tsystems.javaschool.tasks.subsequence;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Subsequence {
@@ -17,34 +16,42 @@ public class Subsequence {
     public boolean find(List x, List y) {
         // TODO: Implement the logic here
 
-        boolean isTrue = true;
+        // Результат.
+        boolean result = true;
 
+        // Проверка на null.
         if (x == null || y == null) throw new IllegalArgumentException();
 
+        // Вычисление результата.
         else {
 
-            List firstList = new ArrayList(x);
-            List secondList = new ArrayList(y);
+            // Количество совпадений элементов списка 'x' с элементами списка 'y'.
             int matchesCount = 0;
+
+            // Индекс списка 'x'.
             int firstListIndex = 0;
+
             String firstTemporarySymbol, secondTemporarySymbol;
 
+            for (Object o : y) {
 
-            for (int i = 0; i < secondList.size(); i++) {
-
-                if (matchesCount == firstList.size()) {
+                // Если все элементы списка 'x' имеются в списке 'y' - завершаем работу.
+                if (matchesCount == x.size()) {
                     break;
                 }
 
+                // Если прошли по всему списку 'x', но совпадений недостаточно - завершаем работу, ответ false.
                 try {
-                    firstTemporarySymbol = firstList.get(firstListIndex).toString();
+                    firstTemporarySymbol = x.get(firstListIndex).toString();
                 } catch (IndexOutOfBoundsException exc) {
-                    isTrue = false;
+                    result = false;
                     break;
                 }
 
-                secondTemporarySymbol = secondList.get(i).toString();
+                secondTemporarySymbol = o.toString();
 
+                // Если получили совпадение элементов, переходим к следующему элементу списка 'x'
+                // и увеличиваем счетчик совпадений.
                 if (firstTemporarySymbol.equals(secondTemporarySymbol)) {
                     matchesCount++;
                     firstListIndex++;
@@ -52,14 +59,16 @@ public class Subsequence {
 
             }
 
+            // Проверка вывода количества совпадений и размера списка 'x'.
             System.out.println(matchesCount);
-            System.out.println(firstList.size());
-            if (matchesCount != firstList.size()) isTrue = false;
+            System.out.println(x.size());
+
+            // Если прошли по всему списку 'y', но совпадений недостаточно - ответ false.
+            if (matchesCount != x.size()) result = false;
 
         }
 
-
-        System.out.println(isTrue);
-        return isTrue;
+        System.out.println(result);
+        return result;
     }
 }

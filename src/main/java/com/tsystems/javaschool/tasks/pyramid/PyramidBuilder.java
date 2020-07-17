@@ -16,8 +16,11 @@ public class PyramidBuilder {
      * @throws {@link CannotBuildPyramidException} if the pyramid cannot be build with given input
      */
 
+    // Параметры пирамиды.
     static int pyramideStairsCount = 0;
     static int pyramideWidthCount = 0;
+
+    // Статус наличия null.
     static boolean isThereNullsInInputNumbers = false;
 
     public int[][] buildPyramid(List<Integer> inputNumbers) {
@@ -25,18 +28,19 @@ public class PyramidBuilder {
 
         int countOfInputNumbers = inputNumbers.size();
 
-        // Проверка на null во входном массиве.
+        // Проверка на наличие null во входном списке.
         isThereNullsInInputArray(inputNumbers);
         if (isThereNullsInInputNumbers) {
-            System.out.println("Пирамиду построить нельзя, в массиве нули");
-            return null;
+            isThereNullsInInputNumbers = false;
+            System.out.println("Пирамиду построить нельзя, во входном списке нули");
+            throw new CannotBuildPyramidException();
         }
 
         // Проверка соответствия размерности.
         canWeBuildThePyramyde(countOfInputNumbers);
         if (pyramideStairsCount == 0) {
             System.out.println("Пирамиду построить нельзя, неподходящее количество элементов");
-            return null;
+            throw new CannotBuildPyramidException();
         }
 
         // После успешной проверки строим пирамиду.
@@ -47,6 +51,7 @@ public class PyramidBuilder {
     // минимальная высота равна 1.
     private static void canWeBuildThePyramyde(int numberCount) {
 
+        // Перебор теоретических параметров пирамиды.
         int dynamicNumberCount = 0;
         int dynamicStairsCount = 1;
         int dynamicWidthCount = 1;
@@ -70,7 +75,7 @@ public class PyramidBuilder {
 
     }
 
-    // Проверяем, есть ли в пирамиде нули.
+    // Проверяем, есть ли в пирамиде null.
     private static void isThereNullsInInputArray(List<Integer> inputNumbersCheck) {
         for (Integer i : inputNumbersCheck) {
             if (i == null) {
@@ -81,16 +86,15 @@ public class PyramidBuilder {
     }
 
 
+    // Метод для построения пирамиды по известным параметрам.
     private static int[][] getPyramide(List<Integer> inputNumbers) {
-
-        int countOfInputNumbers = inputNumbers.size();
 
         List<Integer> sortedInputList = inputNumbers.stream().sorted().collect(Collectors.toList());
 
-        // Создал матрицу.
+        // Создал пустую матрицу.
         int[][] result = new int[pyramideStairsCount][pyramideWidthCount];
 
-        // Заполнение матрицы нулями.
+        // Заполнил матрицы нулями.
         for (int[] stair : result) {
             Arrays.fill(stair, 0);
         }
@@ -100,8 +104,8 @@ public class PyramidBuilder {
         int arrayCount = 0;
 
         // Заполнение пирамиды числами.
-        for (int i = 0, offset = 0; i < pyramideStairsCount; i++, offset++, countOfNumbersOnStair++) {
-            int paintStart = centerOfResultMatrix - offset;
+        for (int i = 0, displacement = 0; i < pyramideStairsCount; i++, displacement++, countOfNumbersOnStair++) {
+            int paintStart = centerOfResultMatrix - displacement;
             for (int j = 0; j < countOfNumbersOnStair * 2; j += 2, arrayCount++) {
                 result[i][paintStart + j] = sortedInputList.get(arrayCount);
             }
@@ -109,8 +113,9 @@ public class PyramidBuilder {
 
         // Проверка вывода построенной пирамиды.
         for (int[] stair : result) {
-            for (int column : stair)
+            for (int column : stair) {
                 System.out.print(column + " ");
+            }
             System.out.println();
         }
 

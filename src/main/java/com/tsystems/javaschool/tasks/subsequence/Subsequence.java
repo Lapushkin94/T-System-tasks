@@ -1,5 +1,6 @@
 package com.tsystems.javaschool.tasks.subsequence;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Subsequence {
@@ -15,6 +16,50 @@ public class Subsequence {
     @SuppressWarnings("rawtypes")
     public boolean find(List x, List y) {
         // TODO: Implement the logic here
-        return false;
+
+        boolean isTrue = true;
+
+        if (x == null || y == null) throw new IllegalArgumentException();
+
+        else {
+
+            List firstList = new ArrayList(x);
+            List secondList = new ArrayList(y);
+            int matchesCount = 0;
+            int firstListIndex = 0;
+            String firstTemporarySymbol, secondTemporarySymbol;
+
+
+            for (int i = 0; i < secondList.size(); i++) {
+
+                if (matchesCount == firstList.size()) {
+                    break;
+                }
+
+                try {
+                    firstTemporarySymbol = firstList.get(firstListIndex).toString();
+                } catch (IndexOutOfBoundsException exc) {
+                    isTrue = false;
+                    break;
+                }
+
+                secondTemporarySymbol = secondList.get(i).toString();
+
+                if (firstTemporarySymbol.equals(secondTemporarySymbol)) {
+                    matchesCount++;
+                    firstListIndex++;
+                }
+
+            }
+
+            System.out.println(matchesCount);
+            System.out.println(firstList.size());
+            if (matchesCount != firstList.size()) isTrue = false;
+
+        }
+
+
+        System.out.println(isTrue);
+        return isTrue;
     }
 }
